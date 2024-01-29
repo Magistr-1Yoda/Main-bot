@@ -53,8 +53,8 @@ def surnames(message, list_names_surnames):
 
 
 @bot.message_handler(func = lambda m : m.text == 'Программирование🤖')
-def send_question(chat_id, question, current_question):
-    db.programming(chat_id, question, current_question)
+def send_question(chat_id):
+    db.programming(chat_id)
 
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     buttons = [types.KeyboardButton(str(i)) for i in range(1, 5)]
@@ -65,9 +65,9 @@ def send_question(chat_id, question, current_question):
         f'{question[1]}\n1. {question[2]}\n2. {question[3]}\n3. {question[4]}\n4. {question[5]}'
         ,reply_markup=keyboard
     )
-    bot.register_next_step_handler(message, check_answer, question, current_question)
+
 @bot.message_handler(func=lambda message: True)
-def check_answer(message, question, current_question):
+def check_answer(message):
     try:
         answer = int(message.text)
         chat_id = message.chat.id
@@ -78,10 +78,10 @@ def check_answer(message, question, current_question):
             send_question(chat_id)
         else:
             bot.send_message(chat_id, 'Неверно. Попробуйте еще раз:')
-            send_question(chat_id )
+            send_question(chat_id)
     except ValueError:
         bot.send_message(chat_id, 'Пожалуйста, введите номер ответа.')
-        send_question(chat_id )
+        send_question(chat_id)
 
 
 
