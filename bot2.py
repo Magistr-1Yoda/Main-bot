@@ -5,7 +5,7 @@ import database
 
 def keyboards_create(MN, NumberColumns=1):
     keyboards = types.ReplyKeyboardMarkup(
-        row_width=NumberColumns, resize_keyboard=True)
+    row_width=NumberColumns, resize_keyboard=True)
     btn_names = [types.KeyboardButton(text=x) for x in MN]
     keyboards.add(*btn_names)
     return keyboards
@@ -14,14 +14,7 @@ def keyboards_create(MN, NumberColumns=1):
 bot = telebot.TeleBot('6279309417:AAEs9jKOp18I_RYxc41EI2uI31zIV0ZxZcQ')
 
 def welcome_message(message):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton('Программирование🤖')
-    btn2 = types.KeyboardButton('Математика🔢')
-    btn3 = types.KeyboardButton('Физика🔬')
-    btn4 = types.KeyboardButton("Естественные науки🌳🦠🪲")
-    btn5 = types.KeyboardButton('Космос🚀')
-    markup.add(btn1, btn2, btn3, btn4, btn5)
-    bot.send_message(message.from_user.id,f'Приветствуем вас в нашем чат-боте!\nМы приготовили для вас увлекательные викторины по физике, программирование, математике и естественным наукам. Давайте начнем наше путешествие в мир знаний! 🚀🔭', reply_markup=markup)
+    bot.send_message(message.from_user.id,f'Приветствуем вас в нашем чат-боте!\nМы приготовили для вас увлекательные викторины по физике, программирование, математике и естественным наукам. Давайте начнем наше путешествие в мир знаний! 🚀🔭', reply_markup=keyboards_create(['Программирование🤖'],['Математика🔢'],['Физика🔬'],["Естественные науки🌳🦠🪲"],['Космос🚀']))
 
 
 @bot.message_handler(commands=['start'])
