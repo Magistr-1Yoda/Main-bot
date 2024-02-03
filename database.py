@@ -28,3 +28,5 @@ class Database:
         'question': question[1],
         'otvet': question[6]
         }
+        return [current_question, question]
+    
