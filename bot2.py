@@ -11,7 +11,7 @@ def keyboards_create(MN, NumberColumns=1):
     return keyboards
 
 
-bot = telebot.TeleBot('6279309417:AAE88A0P3Pc8F-dw9BLiMYXqsj5pprTyP6w')
+bot = telebot.TeleBot('')
 
 def welcome_message(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
