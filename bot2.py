@@ -66,13 +66,12 @@ def send_question(message):
         f'{question[1]}\n1. {question[2]}\n2. {question[3]}\n3. {question[4]}\n4. {question[5]}'
         ,reply_markup=keyboards
     )
+    bot.register_next_step_handler(message, check_answer, chat_id, data)
     
 @bot.message_handler(func=lambda message: True)
-def check_answer(message):
+def check_answer(message, chat_id, data):
     try:
         answer = int(message.text)
-        chat_id = message.chat.id
-        data = db.programming(chat_id)
         current_question = data[0]
 
         correct_option = current_question[chat_id]['otvet']
