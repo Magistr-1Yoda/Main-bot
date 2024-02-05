@@ -77,14 +77,13 @@ def check_answer(message, chat_id, data):
         correct_option = current_question[chat_id]['otvet']
         if answer == correct_option:
             bot.send_message(chat_id, 'Верно! Следующий вопрос:')
-            send_question(chat_id)
+            send_question(message)
         else:
             bot.send_message(chat_id, 'Неверно. Попробуйте еще раз:')
-            send_question(chat_id)
+            send_question(message)
     except ValueError:
         bot.send_message(chat_id, 'Пожалуйста, введите номер ответа.')
-        send_question(chat_id)
-
+        send_question(message)
 
 
 
