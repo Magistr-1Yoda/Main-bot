@@ -54,9 +54,11 @@ def surnames(message, list_names_surnames):
 
 @bot.message_handler(func = lambda m : m.text == 'Программирование🤖')
 def send_question(message):
+    
     chat_id = message.chat.id
     data = db.programming(chat_id)
     question = data[1]
+
     keyboards = types.ReplyKeyboardMarkup(resize_keyboard=True)
     buttons = [types.KeyboardButton(str(i)) for i in range(1, 5)]
     keyboards.add(*buttons)

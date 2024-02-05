@@ -26,7 +26,8 @@ class Database:
         question = self.cursor.fetchone()
         current_question[chat_id] = {
         'question': question[1],
-        'otvet': question[6]
+        'otvet': question[6],
+        'number': question[0]
         }
         return [current_question, question]
     
