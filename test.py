@@ -16,11 +16,10 @@ for idnumber in list_nub:
         list_nub.remove(idnumber)
         print(list_nub)
     elif idnumber not in list_nub:
-        print("Этого числа нету")
+        print("Этого числа нет")
     elif len(list_nub) == 0:
         print("Список полностью пуст")
         break
-
 
 
 
