@@ -20,9 +20,9 @@ class Database:
         self.cursor.execute('INSERT INTO viktorina VALUES (?, ?, ?, ?, ?);', [id, list_names_surnames[0], 0, list_names_surnames[1], list_names_surnames[2],])
         self.conn.commit()
 
-    def programming(self, chat_id, random_number):
+    def programming(self, chat_id):
         current_question = {}
-        self.cursor.execute(f'SELECT * FROM coding WHERE number = "{random_number}"')
+        self.cursor.execute('SELECT * FROM coding ORDER BY RANDOM() LIMIT 1')
         question = self.cursor.fetchone()
         current_question[chat_id] = {
         'question': question[1],
@@ -31,3 +31,6 @@ class Database:
         }
         return [current_question, question]
     
+    def score(self, id):
+        self.cursor.execute(f'UPDATE viktorina SET score = score+10 WHERE chatid={id}')
+        self.conn.commit()

@@ -54,7 +54,8 @@ def surnames(message, list_names_surnames):
 
 @bot.message_handler(func = lambda m : m.text == 'Программирование🤖')
 def send_question(message):
-    
+
+    id = message.chat.id
     chat_id = message.chat.id
     data = db.programming(chat_id)
     question = data[1]
@@ -68,20 +69,21 @@ def send_question(message):
         f'{question[1]}\n1. {question[2]}\n2. {question[3]}\n3. {question[4]}\n4. {question[5]}'
         ,reply_markup=keyboards
     )
-    bot.register_next_step_handler(message, check_answer, chat_id, data)
+    bot.register_next_step_handler(message, check_answer, chat_id, data, id)
     
 @bot.message_handler(func=lambda message: True)
-def check_answer(message, chat_id, data):
+def check_answer(message, chat_id, data, id):
     try:
         answer = int(message.text)
         current_question = data[0]
 
         correct_option = current_question[chat_id]['otvet']
         if answer == correct_option:
-            bot.send_message(chat_id, 'Верно! Следующий вопрос:')
+            bot.send_message(chat_id, 'Верно, вы получили 10 баллов за этот вопрос! Следующий вопрос:')
             send_question(message)
+            db.score(id)
         else:
-            bot.send_message(chat_id, 'Неверно. Попробуйте еще раз:')
+            bot.send_message(chat_id, 'Неверно. Следующий вопрос:')
             send_question(message)
     except ValueError:
         bot.send_message(chat_id, 'Пожалуйста, введите номер ответа.')
