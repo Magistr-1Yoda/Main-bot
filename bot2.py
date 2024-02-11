@@ -86,7 +86,7 @@ def check_answer(message, chat_id, data, id):
             bot.send_message(chat_id, 'Неверно. Следующий вопрос:')
             send_question(message)
     except ValueError:
-        bot.send_message(chat_id, 'Пожалуйста, введите номер ответа.')
+        bot.send_message(chat_id, 'Пожалуйста, введите номер ответа')
         send_question(message)
 
 
