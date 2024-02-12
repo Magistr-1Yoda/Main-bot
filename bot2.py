@@ -3,10 +3,10 @@ from telebot import *
 import database
 
 
-def keyboards_create(MN, NumberColumns=1):
+def keyboards_create(ListNameBTN, NumberColumns=2):
     keyboards = types.ReplyKeyboardMarkup(
     row_width=NumberColumns, resize_keyboard=True)
-    btn_names = [types.KeyboardButton(text=x) for x in MN]
+    btn_names = [types.KeyboardButton(text=x) for x in ListNameBTN]
     keyboards.add(*btn_names)
     return keyboards
 
@@ -14,14 +14,7 @@ def keyboards_create(MN, NumberColumns=1):
 bot = telebot.TeleBot('6279309417:AAE88A0P3Pc8F-dw9BLiMYXqsj5pprTyP6w')
 
 def welcome_message(message):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton('Программирование🤖')
-    btn2 = types.KeyboardButton('Математика🔢')
-    btn3 = types.KeyboardButton('Физика🔬')
-    btn4 = types.KeyboardButton("Естественные науки🌳🦠🪲")
-    btn5 = types.KeyboardButton('Космос🚀')
-    markup.add(btn1, btn2, btn3, btn4, btn5)
-    bot.send_message(message.from_user.id,f'Приветствуем вас в нашем чат-боте!\nМы приготовили для вас увлекательные викторины по физике, программирование, математике и естественным наукам. Давайте начнем наше путешествие в мир знаний! 🚀🔭', reply_markup=markup)
+    bot.send_message(message.from_user.id,f'Приветствуем вас в нашем чат-боте!\nМы приготовили для вас увлекательные викторины по физике, программирование, математике и естественным наукам. Давайте начнем наше путешествие в мир знаний! 🚀🔭', reply_markup=keyboards_create(['Программирование🤖' , 'Математика🔢', 'Физика🔬', 'Естественные науки🌳🦠🪲', 'Космос🚀']))
 
 
 @bot.message_handler(commands=['start'])
@@ -55,9 +48,11 @@ def surnames(message, list_names_surnames):
 @bot.message_handler(func = lambda m : m.text == 'Программирование🤖')
 def send_question(message):
 
+    list_nub = [1,2,3,4,5,6,7,8,9,10]
+    random_number = random.choice(list_nub)
     id = message.chat.id
     chat_id = message.chat.id
-    data = db.programming(chat_id)
+    data = db.programming(chat_id, random_number)
     question = data[1]
 
     keyboards = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -69,8 +64,9 @@ def send_question(message):
         f'{question[1]}\n1. {question[2]}\n2. {question[3]}\n3. {question[4]}\n4. {question[5]}'
         ,reply_markup=keyboards
     )
+        
     bot.register_next_step_handler(message, check_answer, chat_id, data, id)
-    
+        
 @bot.message_handler(func=lambda message: True)
 def check_answer(message, chat_id, data, id):
     try:
@@ -88,8 +84,11 @@ def check_answer(message, chat_id, data, id):
     except ValueError:
         bot.send_message(chat_id, 'Пожалуйста, введите номер ответа')
         send_question(message)
+        
 
-
+@bot.message_handler(func = lambda m : m.text == 'Главное меню🔙')
+def back(message):
+    welcome_message(message)
 
 if __name__ == '__main__':
     db = database.Database()
