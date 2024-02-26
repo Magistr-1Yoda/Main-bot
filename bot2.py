@@ -44,33 +44,31 @@ def surnames(message, list_names_surnames):
     db.new_human(message.chat.id, list_names_surnames)
     welcome_message(message)
 
-
+list_nub = [1,2,3,4,5,6,7,8,9,10]
 @bot.message_handler(func = lambda m : m.text == 'Программирование🤖')
 def send_question(message):
+    if len(list_nub) != 0:
+        random_number = random.choice(list_nub)
+        if random_number in list_nub:
+            chat_id = message.chat.id
+            data = db.programming(chat_id, random_number)
+            question = data[1]
 
-    list_nub = [1,2,3,4,5,6,7,8,9,10]
-    random_number = random.choice(list_nub)
-    if random_number in list_nub:
+            keyboards = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            buttons = [types.KeyboardButton(str(i)) for i in range(1, 5)]
+            keyboards.add(*buttons)
+
+            bot.send_message(
+                chat_id,
+                f'{question[1]}\n1. {question[2]}\n2. {question[3]}\n3. {question[4]}\n4. {question[5]}'
+                ,reply_markup=keyboards
+            )
         
-        id = message.chat.id
-        chat_id = message.chat.id
-        data = db.programming(chat_id, random_number)
-        question = data[1]
-
-        keyboards = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        buttons = [types.KeyboardButton(str(i)) for i in range(1, 5)]
-        keyboards.add(*buttons)
-
-        bot.send_message(
-            chat_id,
-            f'{question[1]}\n1. {question[2]}\n2. {question[3]}\n3. {question[4]}\n4. {question[5]}'
-            ,reply_markup=keyboards
-        )
-            
-        bot.register_next_step_handler(message, check_answer, chat_id, data, id, list_nub, random_number)
-        
+            bot.register_next_step_handler(message, check_answer, chat_id, data,  list_nub, random_number)
+    elif len(list_nub) == 0:
+        bot.send_message(chat_id,f'Вопросы кончились☹️', reply_markup=keyboards_create(['Главное меню🔙']))
 @bot.message_handler(func=lambda message: True)
-def check_answer(message, chat_id, data, id, list_nub, random_number):
+def check_answer(message, chat_id, data, list_nub, random_number):
     try:
         answer = int(message.text)
         current_question = data[0]
@@ -78,9 +76,9 @@ def check_answer(message, chat_id, data, id, list_nub, random_number):
         correct_option = current_question[chat_id]['otvet']
         if answer == correct_option:
             bot.send_message(chat_id, 'Верно, вы получили 10 баллов за этот вопрос! Следующий вопрос:')
-            send_question(message)
             list_nub.remove(random_number)
-            db.score(id)
+            send_question(message)
+            db.score(chat_id)
             print(list_nub)
         else:
             bot.send_message(chat_id, 'Неверно. Следующий вопрос:')
@@ -90,9 +88,7 @@ def check_answer(message, chat_id, data, id, list_nub, random_number):
     except ValueError:
         bot.send_message(chat_id, 'Пожалуйста, введите номер ответа')
         send_question(message)
-    if len(list_nub) == 0:
-        bot.send_message(chat_id, 'Вопросы кончились')
-        
+    
 
 @bot.message_handler(func = lambda m : m.text == 'Главное меню🔙')
 def back(message):

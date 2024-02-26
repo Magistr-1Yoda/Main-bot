@@ -30,6 +30,6 @@ class Database:
         }
         return [current_question, question]
     
-    def score(self, id):
-        self.cursor.execute(f'UPDATE viktorina SET score = score+10 WHERE chatid={id}')
+    def score(self, chat_id):
+        self.cursor.execute(f'UPDATE viktorina SET score = score+10 WHERE chatid={chat_id}')
         self.conn.commit()
