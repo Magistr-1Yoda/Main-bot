@@ -46,7 +46,7 @@ def surnames(message, list_names_surnames):
 
 list_nub = [1,2,3,4,5,6,7,8,9,10]
 @bot.message_handler(func = lambda m : m.text == 'Программирование🤖')
-def send_question(message):
+def send_question_programming(message):
     if len(list_nub) != 0:
         random_number = random.choice(list_nub)
         if random_number in list_nub:
@@ -64,11 +64,11 @@ def send_question(message):
                 ,reply_markup=keyboards
             )
         
-            bot.register_next_step_handler(message, check_answer, chat_id, data,  list_nub, random_number)
+            bot.register_next_step_handler(message, check_answer_programming, chat_id, data, list_nub, random_number)
     elif len(list_nub) == 0:
-        bot.send_message(chat_id,f'Вопросы кончились☹️', reply_markup=keyboards_create(['Главное меню🔙']))
+        bot.send_message(message.chat.id,f'Вопросы кончились☹️', reply_markup=keyboards_create(['Главное меню🔙']))
 @bot.message_handler(func=lambda message: True)
-def check_answer(message, chat_id, data, list_nub, random_number):
+def check_answer_programming(message, chat_id, data, list_nub, random_number):
     try:
         answer = int(message.text)
         current_question = data[0]
@@ -77,17 +77,17 @@ def check_answer(message, chat_id, data, list_nub, random_number):
         if answer == correct_option:
             bot.send_message(chat_id, 'Верно, вы получили 10 баллов за этот вопрос! Следующий вопрос:')
             list_nub.remove(random_number)
-            send_question(message)
+            send_question_programming(message)
             db.score(chat_id)
             print(list_nub)
         else:
             bot.send_message(chat_id, 'Неверно. Следующий вопрос:')
             list_nub.remove(random_number)
-            send_question(message)
+            send_question_programming(message)
             print(list_nub)
     except ValueError:
         bot.send_message(chat_id, 'Пожалуйста, введите номер ответа')
-        send_question(message)
+        send_question_programming(message)
     
 
 @bot.message_handler(func = lambda m : m.text == 'Главное меню🔙')
