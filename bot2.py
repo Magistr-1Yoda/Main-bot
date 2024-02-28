@@ -16,7 +16,6 @@ bot = telebot.TeleBot('6279309417:AAE88A0P3Pc8F-dw9BLiMYXqsj5pprTyP6w')
 def welcome_message(message):
     bot.send_message(message.from_user.id,f'Приветствуем вас в нашем чат-боте!\nМы приготовили для вас увлекательные викторины по физике, программирование, математике и естественным наукам. Давайте начнем наше путешествие в мир знаний! 🚀🔭', reply_markup=keyboards_create(['Программирование🤖' , 'Математика🔢', 'Физика🔬', 'Естественные науки🌳🦠🪲', 'Космос🚀']))
 
-
 @bot.message_handler(commands=['start'])
 def start(message):
     nic =  message.from_user.username
@@ -44,9 +43,17 @@ def surnames(message, list_names_surnames):
     db.new_human(message.chat.id, list_names_surnames)
     welcome_message(message)
 
-list_nub = [1,2,3,4,5,6,7,8,9,10]
+
 @bot.message_handler(func = lambda m : m.text == 'Программирование🤖')
-def send_question_programming(message):
+def start1_programming(message):
+    bot.send_message(message.chat.id, "Это викторина по программированию в ней будет 10 вопросов, время не ограничено, вы готовы?", reply_markup=keyboards_create(['Главное меню🔙', 'Начать ▶']))
+
+@bot.message_handler(func = lambda m : m.text == 'Начать ▶')
+def start2_programming(message):
+    list_nub = [1,2,3,4,5,6,7,8,9,10]
+    bot.register_next_step_handler(message, send_question_programming, list_nub)
+
+def send_question_programming(message, list_nub):
     if len(list_nub) != 0:
         random_number = random.choice(list_nub)
         if random_number in list_nub:
@@ -66,7 +73,8 @@ def send_question_programming(message):
         
             bot.register_next_step_handler(message, check_answer_programming, chat_id, data, list_nub, random_number)
     elif len(list_nub) == 0:
-        bot.send_message(message.chat.id,f'Вопросы кончились☹️', reply_markup=keyboards_create(['Главное меню🔙']))
+        bot.send_message(message.chat.id,f'Вопросы кончились☹️')
+        welcome_message(message)
 @bot.message_handler(func=lambda message: True)
 def check_answer_programming(message, chat_id, data, list_nub, random_number):
     try:
@@ -75,19 +83,19 @@ def check_answer_programming(message, chat_id, data, list_nub, random_number):
 
         correct_option = current_question[chat_id]['otvet']
         if answer == correct_option:
-            bot.send_message(chat_id, 'Верно, вы получили 10 баллов за этот вопрос! Следующий вопрос:')
+            bot.send_message(chat_id, 'Верно, вы получили 10 баллов за этот вопрос!🥳')
             list_nub.remove(random_number)
-            send_question_programming(message)
+            send_question_programming(message, list_nub)
             db.score(chat_id)
             print(list_nub)
         else:
-            bot.send_message(chat_id, 'Неверно. Следующий вопрос:')
+            bot.send_message(chat_id, 'Неверно🔥')
             list_nub.remove(random_number)
-            send_question_programming(message)
+            send_question_programming(message, list_nub)
             print(list_nub)
     except ValueError:
         bot.send_message(chat_id, 'Пожалуйста, введите номер ответа')
-        send_question_programming(message)
+        send_question_programming(message, list_nub)
     
 
 @bot.message_handler(func = lambda m : m.text == 'Главное меню🔙')
