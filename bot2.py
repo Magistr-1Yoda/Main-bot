@@ -14,7 +14,7 @@ def keyboards_create(ListNameBTN, NumberColumns=2):
 bot = telebot.TeleBot('6279309417:AAE88A0P3Pc8F-dw9BLiMYXqsj5pprTyP6w')
 
 def welcome_message(message):
-    bot.send_message(message.from_user.id,f'Приветствуем вас в нашем чат-боте!\nМы приготовили для вас увлекательные викторины по физике, программирование, математике и естественным наукам. Давайте начнем наше путешествие в мир знаний! 🚀🔭', reply_markup=keyboards_create(['Программирование🤖' , 'Математика🔢', 'Физика🔬', 'Естественные науки🌳🦠🪲', 'Космос🚀']))
+    bot.send_message(message.from_user.id,f'Приветствуем вас в нашем чат-боте!\nМы приготовили для вас увлекательные викторины по физике, программирование, математике и естественным наукам. Давайте начнем наше путешествие в мир знаний!🚀🔭', reply_markup=keyboards_create(['Программирование🤖' , 'Математика🔢', 'Физика🔬', 'Естественные науки🌳🦠🪲', 'Космос🚀']))
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -46,13 +46,11 @@ def surnames(message, list_names_surnames):
 
 @bot.message_handler(func = lambda m : m.text == 'Программирование🤖')
 def start1_programming(message):
-    bot.send_message(message.chat.id, "Это викторина по программированию в ней будет 10 вопросов, время не ограничено, вы готовы?", reply_markup=keyboards_create(['Главное меню🔙', 'Начать ▶']))
-
-@bot.message_handler(func = lambda m : m.text == 'Начать ▶')
-def start2_programming(message):
+    bot.send_message(message.chat.id, "Это викторина по программированию в ней будет 10 вопросов, время не ограничено, вы готовы?🏁✨", reply_markup=keyboards_create(['Главное меню🔙', 'Начать ▶']))
     list_nub = [1,2,3,4,5,6,7,8,9,10]
     bot.register_next_step_handler(message, send_question_programming, list_nub)
 
+@bot.message_handler(func = lambda m : m.text == 'Начать ▶')
 def send_question_programming(message, list_nub):
     if len(list_nub) != 0:
         random_number = random.choice(list_nub)
@@ -73,8 +71,8 @@ def send_question_programming(message, list_nub):
         
             bot.register_next_step_handler(message, check_answer_programming, chat_id, data, list_nub, random_number)
     elif len(list_nub) == 0:
-        bot.send_message(message.chat.id,f'Вопросы кончились☹️')
-        welcome_message(message)
+        bot.send_message(message.chat.id,f'Вопросы кончились☹️ ')
+        back(message)
 @bot.message_handler(func=lambda message: True)
 def check_answer_programming(message, chat_id, data, list_nub, random_number):
     try:
@@ -100,7 +98,7 @@ def check_answer_programming(message, chat_id, data, list_nub, random_number):
 
 @bot.message_handler(func = lambda m : m.text == 'Главное меню🔙')
 def back(message):
-    welcome_message(message)
+    bot.send_message(message.chat.id, "Вы вернулись в главное меню, здесь вы можете попробовать другие викторины!🔎🧠", reply_markup=keyboards_create(['Программирование🤖' , 'Математика🔢', 'Физика🔬', 'Естественные науки🌳🦠🪲', 'Космос🚀']))
 
 if __name__ == '__main__':
     db = database.Database()
