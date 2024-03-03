@@ -6,30 +6,40 @@ class Database:
         self.cursor = self.conn.cursor()
 
     def check_human(self, id):
-        self.cursor.execute(f'SELECT chatid FROM viktorina WHERE chatid = "{id}"')
+        self.cursor.execute(f'SELECT chatid FROM user_id WHERE chatid = "{id}"')
         return self.cursor.fetchone()
     
     def all_human(self, id):
-        self.cursor.execute(f'SELECT username, name, surname FROM viktorina WHERE chatid={id}')
+        self.cursor.execute(f'SELECT username, name, surname FROM user_id WHERE chatid={id}')
         return self.cursor.fetchone()
     
     def close(self):
         self.conn.close()
 
     def new_human(self, id, list_names_surnames):
-        self.cursor.execute('INSERT INTO viktorina VALUES (?, ?, ?, ?, ?);', [id, list_names_surnames[0], 0, list_names_surnames[1], list_names_surnames[2],])
+        self.cursor.execute('INSERT INTO user_id VALUES (?, ?, ?, ?, ?);', [id, list_names_surnames[0], 0, list_names_surnames[1], list_names_surnames[2],])
         self.conn.commit()
 
-    def programming(self, chat_id, random_number):
+    def programming(self, id, random_number):
         current_question = {}
         self.cursor.execute(f'SELECT * FROM coding WHERE number = "{random_number}"')
         question = self.cursor.fetchone()
-        current_question[chat_id] = {
+        current_question[id] = {
         'question': question[1],
         'otvet': question[6]
         }
         return [current_question, question]
     
-    def score(self, chat_id):
-        self.cursor.execute(f'UPDATE viktorina SET score = score+10 WHERE chatid={chat_id}')
+    def score(self, id):
+        self.cursor.execute(f'UPDATE user_id SET score = score+10 WHERE chatid={id}')
         self.conn.commit()
+
+    def check_score(id):
+        conn = sqlite3.connect('viktorina.db', check_same_thread=False)
+        cursor = conn.cursor()
+        cursor.execute(f'SELECT name, surname, score FROM user_id WHERE chatid = {id}')
+        select_score = cursor.fetchone()
+        select2_score = select_score.spl(',')
+        print(select2_score)
+
+    check_score(5090116452)
