@@ -42,4 +42,3 @@ class Database:
         select2_score = select_score.spl(',')
         print(select2_score)
 
-    check_score(5090116452)
