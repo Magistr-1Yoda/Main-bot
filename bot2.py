@@ -105,4 +105,4 @@ def check_answer_programming(message, id, data, list_nub, random_number):
     
 if __name__ == '__main__':
     db = database.Database()
-    bot.polling()
+    bot.infinity_polling()
