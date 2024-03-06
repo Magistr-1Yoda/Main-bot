@@ -22,7 +22,7 @@ class Database:
 
     def programming(self, id, random_number):
         current_question = {}
-        self.cursor.execute(f'SELECT * FROM coding WHERE number = "{random_number}"')
+        self.cursor.execute(f'SELECT * FROM programming WHERE number = "{random_number}"')
         question = self.cursor.fetchone()
         current_question[id] = {
         'question': question[1],
@@ -34,12 +34,16 @@ class Database:
         self.cursor.execute(f'UPDATE user_id SET score = score+10 WHERE chatid={id}')
         self.conn.commit()
 
-    def check_score(id):
-        conn = sqlite3.connect('viktorina.db', check_same_thread=False)
-        cursor = conn.cursor()
-        cursor.execute(f'SELECT name, surname, score FROM user_id WHERE chatid = {id}')
-        select_score = cursor.fetchone()
-        select2_score = select_score.spl(',')
-        print(select2_score)
+    def check_score(self, id):
+        self.cursor.execute(f'SELECT name, surname, score FROM user_id WHERE chatid = {id}')
+        return self.cursor.fetchone()
 
-    check_score(5090116452)
+    def physics(self, id, random_number):
+        current_question = {}
+        self.cursor.execute(f'SELECT * FROM physics WHERE number = "{random_number}"')
+        question = self.cursor.fetchone()
+        current_question[id] = {
+        'question': question[1],
+        'otvet': question[6]
+        }
+        return [current_question, question]
