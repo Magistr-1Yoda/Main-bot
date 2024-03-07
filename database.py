@@ -20,9 +20,9 @@ class Database:
         self.cursor.execute('INSERT INTO user_id VALUES (?, ?, ?, ?, ?);', [id, list_names_surnames[0], 0, list_names_surnames[1], list_names_surnames[2],])
         self.conn.commit()
 
-    def programming(self, id, random_number):
+    def coding(self, id, random_number):
         current_question = {}
-        self.cursor.execute(f'SELECT * FROM programming WHERE number = "{random_number}"')
+        self.cursor.execute(f'SELECT * FROM coding WHERE number = "{random_number}"')
         question = self.cursor.fetchone()
         current_question[id] = {
         'question': question[1],

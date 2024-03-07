@@ -63,7 +63,7 @@ def send_question_programming(message, list_nub):
         random_number = random.choice(list_nub)
         if random_number in list_nub:
             id = message.chat.id
-            data = db.programming(id, random_number)
+            data = db.coding(id, random_number)
             question = data[1]
 
             keyboards = types.ReplyKeyboardMarkup(resize_keyboard=True)
