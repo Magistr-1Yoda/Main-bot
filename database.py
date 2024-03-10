@@ -34,7 +34,7 @@ class Database:
         self.cursor.execute(f'UPDATE user_id SET score = score+10 WHERE chatid={id}')
         self.conn.commit()
 
-    def check_score(self, id):
+    def check_profile(self, id):
         self.cursor.execute(f'SELECT name, surname, score FROM user_id WHERE chatid = {id}')
         return self.cursor.fetchone()
 

@@ -14,11 +14,17 @@ def keyboards_create(ListNameBTN, NumberColumns=2):
 bot = telebot.TeleBot('6279309417:AAE88A0P3Pc8F-dw9BLiMYXqsj5pprTyP6w')
 
 def welcome_message(message):
-    bot.send_message(message.from_user.id,f'Приветствуем вас в нашем чат-боте!\nМы приготовили для вас увлекательные викторины по физике, программированию, математике и естественным наукам. Давайте начнем наше путешествие в мир знаний!🚀🔭', reply_markup=keyboards_create(['Программирование🤖' , 'Математика🔢', 'Физика🔬', 'Естественные науки🌳🦠🪲', 'Космос🚀']))
+    bot.send_message(message.from_user.id,f'Приветствуем вас в нашем чат-боте!\nМы приготовили для вас увлекательные викторины по физике, программированию, математике и естественным наукам. Давайте начнем наше путешествие в мир знаний!🚀🔭', reply_markup=keyboards_create(['Программирование🤖' , 'Математика🔢', 'Физика🔬', 'Естественные науки🌳🦠🪲', 'Космос🚀','Личная информация🛈']))
 
 @bot.message_handler(func = lambda m : m.text == 'Главное меню🔙')
 def back(message):
-    bot.send_message(message.chat.id, "Вы вернулись в главное меню, здесь вы можете попробовать другие викторины!🔎🧠", reply_markup=keyboards_create(['Программирование🤖' , 'Математика🔢', 'Физика🔬', 'Естественные науки🌳🦠🪲', 'Космос🚀']))
+    bot.send_message(message.chat.id, "Вы вернулись в главное меню, здесь вы можете попробовать другие викторины!🔎🧠", reply_markup=keyboards_create(['Программирование🤖' , 'Математика🔢', 'Физика🔬', 'Естественные науки🌳', 'Космос🚀', 'Личная информация🛈']))
+
+@bot.message_handler(func = lambda m : m.text == 'Личная информация🛈')
+def info(message):
+    id = message.chat.id
+    score = db.check_profile(id)
+    bot.send_message(id, f"Вас зовут: {score[0]} {score[1]}. \nВаше количество баллов: {score[2]}", reply_markup=keyboards_create(['Главное меню🔙']))
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -81,7 +87,6 @@ def send_question_programming(message, list_nub):
         bot.send_message(message.chat.id,f'Вопросы кончились☹️ ')
         back(message)
 
-@bot.message_handler(func=lambda message: True)
 def check_answer_programming(message, id, data, list_nub, random_number):
     try:
         answer = int(message.text)
@@ -106,10 +111,10 @@ def check_answer_programming(message, id, data, list_nub, random_number):
 
 @bot.message_handler(func = lambda m : m.text == 'Физика🔬')
 def start1_physics(message):
-    bot.send_message(message.chat.id, "Это викторина по физике в ней будет 10 вопросов, время не ограничено, вы готовы?⭐", reply_markup=keyboards_create(['Главное меню🔙', 'Начать ▶']))
+    bot.send_message(message.chat.id, "Это викторина по физике в ней будет 10 вопросов, время не ограничено, вы готовы?⭐", reply_markup=keyboards_create(['Главное меню🔙', 'Начать✨']))
 
 
-@bot.message_handler(func = lambda m : m.text == 'Начать ▶')
+@bot.message_handler(func = lambda m : m.text == 'Начать✨')
 def start2_physics(message):
     list_nub = [1,2,3,4,5,6,7,8,9,10]
     send_question_physics(message, list_nub)
@@ -137,7 +142,7 @@ def send_question_physics(message, list_nub):
         bot.send_message(message.chat.id,f'Вопросы кончились☹️ ')
         back(message)
 
-@bot.message_handler(func=lambda message: True)
+
 def check_answer_physics(message, id, data, list_nub, random_number):
     try:
         answer = int(message.text)
