@@ -163,6 +163,61 @@ def check_answer_physics(message, id, data, list_nub, random_number):
     except ValueError:
         bot.send_message(id, 'Пожалуйста, введите номер ответа')
         send_question_physics(message, list_nub)
+
+@bot.message_handler(func = lambda m : m.text == 'Математика🔢')
+def start1_matem(message):
+    bot.send_message(message.chat.id, "Это викторина по математике в ней будет 10 вопросов, время не ограничено, вы готовы?💫", reply_markup=keyboards_create(['Главное меню🔙', 'Начать🔍']))
+
+
+@bot.message_handler(func = lambda m : m.text == 'Начать🔍')
+def start2_matem(message):
+    list_nub = [1,2,3,4,5,6,7,8,9,10]
+    send_question_matem(message, list_nub)
+
+def send_question_matem(message, list_nub):
+    if len(list_nub) != 0:
+        random_number = random.choice(list_nub)
+        if random_number in list_nub:
+            id = message.chat.id
+            data = db.matem(id, random_number)
+            question = data[1]
+
+            keyboards = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            buttons = [types.KeyboardButton(str(i)) for i in range(1, 5)]
+            keyboards.add(*buttons)
+
+            bot.send_message(
+                id,
+                f'{question[1]}\n1. {question[2]}\n2. {question[3]}\n3. {question[4]}\n4. {question[5]}'
+                ,reply_markup=keyboards
+            )
+        
+            bot.register_next_step_handler(message, check_answer_matem, id, data, list_nub, random_number)
+    elif len(list_nub) == 0:
+        bot.send_message(message.chat.id,f'Вопросы кончились☹️ ')
+        back(message)
+
+
+def check_answer_matem(message, id, data, list_nub, random_number):
+    try:
+        answer = int(message.text)
+        current_question = data[0]
+
+        correct_option = current_question[id]['otvet']
+        if answer == correct_option:
+            bot.send_message(id, 'Верно, вы получили 10 баллов за этот вопрос!🥳')
+            list_nub.remove(random_number)
+            send_question_matem(message, list_nub)
+            db.score(id)
+            print(list_nub)
+        else:
+            bot.send_message(id, 'Неверно🔥')
+            list_nub.remove(random_number)
+            send_question_matem(message, list_nub)
+            print(list_nub)
+    except ValueError:
+        bot.send_message(id, 'Пожалуйста, введите номер ответа')
+        send_question_matem(message, list_nub)        
     
 if __name__ == '__main__':
     db = database.Database()

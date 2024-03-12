@@ -47,3 +47,13 @@ class Database:
         'otvet': question[6]
         }
         return [current_question, question]
+    
+    def matem(self, id, random_number):
+        current_question = {}
+        self.cursor.execute(f'SELECT * FROM matem WHERE number = "{random_number}"')
+        question = self.cursor.fetchone()
+        current_question[id] = {
+        'question': question[1],
+        'otvet': question[6]
+        }
+        return [current_question, question]
