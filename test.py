@@ -11,32 +11,32 @@ def keyboards_create(ListNameBTN, NumberColumns=2):
     return keyboards
 
 
-bot = telebot.TeleBot('6616525038:AAF5FjJ5EqRj0hM3x6FGHJyQ70yk3cG3D3E')
+bot = telebot.TeleBot('6279309417:AAE88A0P3Pc8F-dw9BLiMYXqsj5pprTyP6w')
 
 def welcome_message(message):
     id = message.chat.id
     score = db.check_profile(id)
     if score[2] == 0:
-        msg = bot.send_message(message.from_user.id,f'Приветствуем вас в нашем чат-боте!\nМы приготовили для вас увлекательные викторины по физике, программированию, математике и естественным наукам. Давайте начнем наше путешествие в мир знаний!🚀🔭', reply_markup=keyboards_create(['Программирование🤖' , 'Математика🔢', 'Физика🔬', 'Естественные науки🌳🦠🪲','Личная информация📋']))
-        bot.register_next_step_handler(msg, choice)
+        msg = bot.send_message(message.from_user.id,f'Приветствуем вас в нашем чат-боте!\nМы приготовили для вас увлекательные викторины по физике, программированию, математике и естественным наукам. Давайте начнем наше путешествие в мир знаний!🚀🔭', reply_markup=keyboards_create(['Программирование🤖' , 'Математика🔢', 'Физика🔬', 'Естественные науки🌳🦠🪲','Личная информация🛈']))
+        bot.register_next_step_handler(msg, _test)
     else:
-        msg = bot.send_message(message.chat.id, "Вы вернулись в главное меню, здесь вы можете попробовать другие викторины!🔎🧠", reply_markup=keyboards_create(['Программирование🤖' , 'Математика🔢', 'Физика🔬', 'Естественные науки🌳🦠🪲', 'Личная информация📋']))
-        bot.register_next_step_handler(msg, choice)
+        msg = bot.send_message(message.chat.id, "Вы вернулись в главное меню, здесь вы можете попробовать другие викторины!🔎🧠", reply_markup=keyboards_create(['Программирование🤖' , 'Математика🔢', 'Физика🔬', 'Естественные науки🌳', 'Личная информация🛈']))
+        bot.register_next_step_handler(msg, _test)
 
-def choice(message):
+def _test(message):
     enter = message.text
     if enter in ['Программирование🤖','Физика🔬','Математика🔢', 'География🌏', 'Биология🧬', 'Химия🧪']:
         msg = bot.send_message(message.chat.id, "В викторине будет 10 вопросов, время не ограничено, вы готовы?🏁✨", reply_markup=keyboards_create(['Главное меню🔙', 'Начать▶']))
-        bot.register_next_step_handler(msg, start_choice, enter)
-    elif enter == 'Естественные науки🌳🦠🪲':
+        bot.register_next_step_handler(msg, _test2, enter)
+    elif enter == 'Естественные науки🌳':
         msg = bot.send_message(message.chat.id, "Выберите определенную тему🌏🧬🧪", reply_markup=keyboards_create(['География🌏', 'Биология🧬', 'Химия🧪', 'Главное меню🔙']))
-        bot.register_next_step_handler(msg, choice_Natural)
-    elif enter == 'Личная информация📋':
+        bot.register_next_step_handler(msg, _test3)
+    elif enter == 'Личная информация🛈':
         info(message)
 
 
 
-def start_choice(message, enter):
+def _test2(message, enter):
     list_nub = [1,2,3,4,5,6,7,8,9,10]
     if message.text == 'Начать▶':
         if enter == 'Программирование🤖':
@@ -47,28 +47,24 @@ def start_choice(message, enter):
             send_question_matem(message, list_nub)
         elif enter == 'География🌏':
             send_question_geogr(message, list_nub)
-        elif enter == 'Биология🧬':
-            send_question_biolog(message, list_nub)
-        elif enter == 'Химия🧪':
-            send_question_chemic(message, list_nub)
     elif message.text == 'Главное меню🔙':
         welcome_message(message)
 
 
-def choice_Natural(message):
+def _test3(message):
     enter = message.text
     if enter in [ 'Химия🧪', 'Биология🧬', 'География🌏']:
-        choice(message)
+        _test(message)
     else:
         welcome_message(message)
 
 
-@bot.message_handler(func = lambda m : m.text == 'Личная информация📋')
+@bot.message_handler(func = lambda m : m.text == 'Личная информация🛈')
 def info(message):
     id = message.chat.id
     score = db.check_profile(id)
     msg = bot.send_message(id, f"Вас зовут: {score[0]} {score[1]}. \nВаше количество баллов: {score[2]}🌟")
-    bot.register_next_step_handler(msg, choice)
+    bot.register_next_step_handler(msg, _test)
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -80,7 +76,7 @@ def start(message):
     elif new is None:
         list_names_surnames = []
         list_names_surnames.append(nic)
-        bot.send_message(message.from_user.id, "Вы начали регестрацию💭, введите своё имя:")
+        bot.send_message(message.from_user.id, "Вы начали регестрацию, введите своё имя:")
         bot.register_next_step_handler(message, names, list_names_surnames)
 
 
@@ -139,12 +135,12 @@ def check_answer_programming(message, id, data, list_nub, random_number):
             list_nub.remove(random_number)
             send_question_programming(message, list_nub)
             db.score(id)
-            
+            print(list_nub)
         else:
             bot.send_message(id, 'Неверно🔥')
             list_nub.remove(random_number)
             send_question_programming(message, list_nub)
-            
+            print(list_nub)
     except ValueError:
         bot.send_message(id, 'Пожалуйста, введите номер ответа')
         send_question_programming(message, list_nub)
@@ -193,12 +189,12 @@ def check_answer_physics(message, id, data, list_nub, random_number):
             list_nub.remove(random_number)
             send_question_physics(message, list_nub)
             db.score(id)
-            
+            print(list_nub)
         else:
             bot.send_message(id, 'Неверно🔥')
             list_nub.remove(random_number)
             send_question_physics(message, list_nub)
-            
+            print(list_nub)
     except ValueError:
         bot.send_message(id, 'Пожалуйста, введите номер ответа')
         send_question_physics(message, list_nub)
@@ -248,12 +244,12 @@ def check_answer_matem(message, id, data, list_nub, random_number):
             list_nub.remove(random_number)
             send_question_matem(message, list_nub)
             db.score(id)
-            
+            print(list_nub)
         else:
             bot.send_message(id, 'Неверно🔥')
             list_nub.remove(random_number)
             send_question_matem(message, list_nub)
-            
+            print(list_nub)
     except ValueError:
         bot.send_message(id, 'Пожалуйста, введите номер ответа')
         send_question_matem(message, list_nub)
@@ -304,12 +300,12 @@ def check_answer_geogr(message, id, data, list_nub, random_number):
             list_nub.remove(random_number)
             send_question_geogr(message, list_nub)
             db.score(id)
-            
+            print(list_nub)
         else:
             bot.send_message(id, 'Неверно🔥')
             list_nub.remove(random_number)
             send_question_geogr(message, list_nub)
-            
+            print(list_nub)
     except ValueError:
         bot.send_message(id, 'Пожалуйста, введите номер ответа')
         send_question_geogr(message, list_nub)
@@ -362,12 +358,12 @@ def check_answer_biolog(message, id, data, list_nub, random_number):
             list_nub.remove(random_number)
             send_question_biolog(message, list_nub)
             db.score(id)
-            
+            print(list_nub)
         else:
             bot.send_message(id, 'Неверно🔥')
             list_nub.remove(random_number)
             send_question_biolog(message, list_nub)
-            
+            print(list_nub)
     except ValueError:
         bot.send_message(id, 'Пожалуйста, введите номер ответа')
         send_question_biolog(message, list_nub)
@@ -417,12 +413,12 @@ def check_answer_chemic(message, id, data, list_nub, random_number):
             list_nub.remove(random_number)
             send_question_chemic(message, list_nub)
             db.score(id)
-            
+            print(list_nub)
         else:
             bot.send_message(id, 'Неверно🔥')
             list_nub.remove(random_number)
             send_question_chemic(message, list_nub)
-            
+            print(list_nub)
     except ValueError:
         bot.send_message(id, 'Пожалуйста, введите номер ответа')
         send_question_chemic(message, list_nub)
