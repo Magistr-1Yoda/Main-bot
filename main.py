@@ -80,7 +80,7 @@ def start(message):
     elif new is None:
         list_names_surnames = []
         list_names_surnames.append(nic)
-        bot.send_message(message.from_user.id, "Вы начали регестрацию💭, введите своё имя:")
+        bot.send_message(message.from_user.id, "Вы начали регестрацию💭 \nВведите своё имя:")
         bot.register_next_step_handler(message, names, list_names_surnames)
 
 
