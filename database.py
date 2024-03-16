@@ -19,16 +19,6 @@ class Database:
     def new_human(self, id, list_names_surnames):
         self.cursor.execute('INSERT INTO user_id VALUES (?, ?, ?, ?, ?);', [id, list_names_surnames[0], 0, list_names_surnames[1], list_names_surnames[2],])
         self.conn.commit()
-
-    def coding(self, id, random_number):
-        current_question = {}
-        self.cursor.execute(f'SELECT * FROM coding WHERE number = "{random_number}"')
-        question = self.cursor.fetchone()
-        current_question[id] = {
-        'question': question[1],
-        'otvet': question[6]
-        }
-        return [current_question, question]
     
     def score(self, id):
         self.cursor.execute(f'UPDATE user_id SET score = score+10 WHERE chatid={id}')
@@ -38,19 +28,9 @@ class Database:
         self.cursor.execute(f'SELECT name, surname, score FROM user_id WHERE chatid = {id}')
         return self.cursor.fetchone()
 
-    def physics(self, id, random_number):
+    def _test(self, id, random_number, enter):
         current_question = {}
-        self.cursor.execute(f'SELECT * FROM physics WHERE number = "{random_number}"')
-        question = self.cursor.fetchone()
-        current_question[id] = {
-        'question': question[1],
-        'otvet': question[6]
-        }
-        return [current_question, question]
-
-    def matem(self, id, random_number):
-        current_question = {}
-        self.cursor.execute(f'SELECT * FROM matem WHERE number = "{random_number}"')
+        self.cursor.execute(f'SELECT * FROM {enter} WHERE number = "{random_number}"')
         question = self.cursor.fetchone()
         current_question[id] = {
         'question': question[1],
@@ -58,34 +38,8 @@ class Database:
         }
         return [current_question, question]
     
-    def geogr(self, id, random_number):
-        current_question = {}
-        self.cursor.execute(f'SELECT * FROM geogr WHERE number = "{random_number}"')
-        question = self.cursor.fetchone()
-        current_question[id] = {
-        'question': question[1],
-        'otvet': question[6]
-        }
-        return [current_question, question]
-    
-    
-    def biolog(self, id, random_number):
-        current_question = {}
-        self.cursor.execute(f'SELECT * FROM biolog WHERE number = "{random_number}"')
-        question = self.cursor.fetchone()
-        current_question[id] = {
-        'question': question[1],
-        'otvet': question[6]
-        }
-        return [current_question, question]
-
-
-    def chemic(self, id, random_number):
-        current_question = {}
-        self.cursor.execute(f'SELECT * FROM chemic WHERE number = "{random_number}"')
-        question = self.cursor.fetchone()
-        current_question[id] = {
-        'question': question[1],
-        'otvet': question[6]
-        }
-        return [current_question, question]
+    def get_table(self):
+        self.cursor.execute("SELECT name FROM sqlite_master where type='table'")
+        data = [i[0] for i in self.cursor.fetchall()[1:]]
+        return data
+        
