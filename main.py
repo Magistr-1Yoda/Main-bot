@@ -11,7 +11,7 @@ def keyboards_create(ListNameBTN, NumberColumns=2):
     return keyboards
 
 
-bot = telebot.TeleBot('6616525038:AAF5FjJ5EqRj0hM3x6FGHJyQ70yk3cG3D3E')
+bot = telebot.TeleBot('6279309417:AAE88A0P3Pc8F-dw9BLiMYXqsj5pprTyP6w')
 
 def welcome_message(message):
     id = message.chat.id
@@ -31,7 +31,7 @@ def choice(message, data):
         bot.register_next_step_handler(msg, start_choice, enter)
     elif enter == 'Естественные науки🌳🦠🪲':
         msg = bot.send_message(message.chat.id, "Выберите определенную тему🌏🧬🧪", reply_markup=keyboards_create([ data[3], data[4], data[5], 'Главное меню🔙']))
-        bot.register_next_step_handler(msg, choice_Natural)
+        bot.register_next_step_handler(msg, choice_Natural, data)
     elif enter == 'Личная информация📋':
         info(message, data)
 
@@ -46,10 +46,10 @@ def start_choice(message, enter):
         welcome_message(message)
 
 
-def choice_Natural(message):
+def choice_Natural(message, data):
     enter = message.text
-    if enter:
-        choice(message)
+    if enter in [data[3], data[4], data[5]]:
+        choice(message, data)
     else:
         welcome_message(message)
 
