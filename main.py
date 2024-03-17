@@ -11,7 +11,7 @@ def keyboards_create(ListNameBTN, NumberColumns=2):
     return keyboards
 
 
-bot = telebot.TeleBot('6279309417:AAE88A0P3Pc8F-dw9BLiMYXqsj5pprTyP6w')
+bot = telebot.TeleBot('6616525038:AAF5FjJ5EqRj0hM3x6FGHJyQ70yk3cG3D3E')
 
 def welcome_message(message):
     id = message.chat.id
@@ -92,7 +92,7 @@ def send_question(message, list_nub, enter):
         random_number = random.choice(list_nub)
         if random_number in list_nub:
             id = message.chat.id
-            data = db._test(id, random_number, enter)
+            data = db.start_viktorina(id, random_number, enter)
             question = data[1]
 
             keyboards = types.ReplyKeyboardMarkup(resize_keyboard=True)

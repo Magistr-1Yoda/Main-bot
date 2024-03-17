@@ -28,7 +28,7 @@ class Database:
         self.cursor.execute(f'SELECT name, surname, score FROM user_id WHERE chatid = {id}')
         return self.cursor.fetchone()
 
-    def _test(self, id, random_number, enter):
+    def start_viktorina(self, id, random_number, enter):
         current_question = {}
         self.cursor.execute(f'SELECT * FROM {enter} WHERE number = "{random_number}"')
         question = self.cursor.fetchone()
