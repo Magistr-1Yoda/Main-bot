@@ -11,7 +11,7 @@ def keyboards_create(ListNameBTN, NumberColumns=2):
     return keyboards
 
 
-bot = telebot.TeleBot('6616525038:AAF5FjJ5EqRj0hM3x6FGHJyQ70yk3cG3D3E')
+bot = telebot.TeleBot('TOKEN BOT')
 
 def welcome_message(message):
     id = message.chat.id
@@ -21,7 +21,7 @@ def welcome_message(message):
         msg = bot.send_message(message.from_user.id,f'Приветствуем вас в нашем чат-боте!\nМы приготовили для вас увлекательные викторины по физике, программированию, математике и естественным наукам. Давайте начнем наше путешествие в мир знаний!🚀🔭', reply_markup=keyboards_create([data[0] , data[1], data[2], 'Естественные науки🌳🦠🪲' ,'Личная информация📋']))
         bot.register_next_step_handler(msg, choice, data)
     else:
-        msg = bot.send_message(message.chat.id, "Вы вернулись в главное меню, здесь вы можете попробовать другие викторины!🔎🧠", reply_markup=keyboards_create([ data[0] , data[1], data[2], 'Естественные науки🌳🦠🪲' , 'Личная информация📋']))
+        msg = bot.send_message(message.chat.id, "Вы вернулись в главное меню, здесь вы можете попробовать другие викторины!🔎🧠", reply_markup=keyboards_create([data[0] , data[1], data[2], 'Естественные науки🌳🦠🪲' , 'Личная информация📋']))
         bot.register_next_step_handler(msg, choice, data)
 
 def choice(message, data):
@@ -85,7 +85,6 @@ def surnames(message, list_names_surnames):
     list_names_surnames.append(surnames)
     db.new_human(message.chat.id, list_names_surnames)
     welcome_message(message)
-
 
 def send_question(message, list_nub, enter):
     if len(list_nub) != 0:
